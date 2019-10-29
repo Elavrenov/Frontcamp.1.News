@@ -1,11 +1,4 @@
-'use strict'
-
 const apiKey = "d7081477cc2b49a89e8b5dc3340acb97";
-
-// https://newsapi.org/v2/top-headlines -G \
-//     -d country=us \
-//     -d apiKey=d7081477cc2b49a89e8b5dc3340acb97
-
 
 export async function getAllNewsPublishers(){
     try{

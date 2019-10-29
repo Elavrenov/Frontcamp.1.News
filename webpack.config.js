@@ -1,17 +1,20 @@
 const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 //const NpmInstallPlugin = require("npm-install-webpack-plugin");
 // require("babel-core/register");
 // require("babel-polyfill");
 
 module.exports = {
-    entry: {
-        main: "./src/js/index.js",
-        news: "./src/js/news.js"
-    },
+    entry: './src/js/index.js',
     output: {
-        filename: "[name].bundle.js",
+        filename: "main.js",
         path: path.resolve(__dirname, "dist")
     },
+    plugins:[
+        new HtmlWebpackPlugin({
+            template:'./src/index.html'
+        })
+    ],
     devServer:{
         contentBase: path.resolve(__dirname, "dist"),
         port: 9000
