@@ -1,11 +1,11 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-//const NpmInstallPlugin = require("npm-install-webpack-plugin");
-// require("babel-core/register");
-// require("babel-polyfill");
+require("babel-core/register");
+require("babel-polyfill");
 
 module.exports = {
-    entry: './src/js/index.js',
+    mode: 'production',
+    entry: ['babel-polyfill','./src/js/index.js','whatwg-fetch'],
     output: {
         filename: "main.js",
         path: path.resolve(__dirname, "dist")
@@ -28,7 +28,6 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: [
-                            //'@babel/preset-env'
                             "es2015", 
                             "stage-0"
                         ]

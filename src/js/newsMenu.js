@@ -6,10 +6,11 @@ export class NewsBar{
     }
 
     async createNewsBar(publisher){
-        let news = await newsApi.getNewsRecordsByPublisherName(publisher, 10);
+        const newsDiv = document.createElement('div');
+        newsDiv.classList.add('newsDiv');
+        this.barEl.appendChild(newsDiv);
 
-        debugger;
-        for(let item of news){
+        for(let item of await newsApi.getNewsRecordsByPublisherName(publisher)){
             let div = document.createElement('div');
             div.classList.add('newsBlock');
 
@@ -19,14 +20,25 @@ export class NewsBar{
             div.appendChild(title);
 
             let picture = document.createElement('img');
-            picture.setAttribute('src',`${item.urlToImage}`)
+
+            if(!item.urlToImage){
+                item.urlToImage = 'https://patientsorgtt.org/wp-content/themes/pott/NoData.png';
+            }
+
+            picture.setAttribute('src',`${item.urlToImage}`);               
 
             let link = document.createElement('a');
             link.setAttribute('href',`${item.url}`);
             link.appendChild(picture);
             div.appendChild(link);
 
-            this.barEl.appendChild(div);
+            newsDiv.appendChild(div);
+        }
+    }
+    cleanData(){
+        const newsBar = document.getElementsByClassName("newsDiv")[0];
+        if(newsBar){
+            newsBar.parentNode.removeChild(newsBar);
         }
     }
 }

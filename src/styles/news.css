@@ -1,18 +1,26 @@
+.newsDiv{
+    display: flex;
+    flex-wrap: wrap;
+    height: 1500px;
+    align-content: space-between;
+}
+
 #news a img{
     height: 300px;
     width: 300px;;
 }
 
 #news span{
-    font-size: 20px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: rgb(22, 18, 18);
+    font-size: 25px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: #ffffff;
 }
 
 .newsBlock{
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
-    height: 500px;
     width: 300px;
-
+    margin-left: 50px;
+    margin-bottom: 50px;
 }
