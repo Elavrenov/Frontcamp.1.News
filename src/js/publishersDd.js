@@ -4,7 +4,6 @@ export class DropDown {
         this.placeholder;
         this.opts;
         this.val;
-        this.isActive = false;
         this.buttonNextPage;
     }
     init() {
@@ -14,7 +13,6 @@ export class DropDown {
 
         this.dd.onclick = () => {
             this.dd.classList.toggle('active');
-            this.isActive = true;
         };
         
         this.opts.onclick = (data) =>{
@@ -23,15 +21,14 @@ export class DropDown {
         };
         
         document.onclick = (e) => {
-            let target = e.target;
-            let itsMenu = target == this.dd || this.dd.contains(target);
-            let itsHamburger = target == this.opts;
-            const itsGetButton = target == document.getElementById('getNewsButton');
+            const target = e.target;
+            const itsMenu = target == this.dd || this.dd.contains(target);
+            const itsHamburger = target == this.opts;
             const itsButtonNextPage = target == this.buttonNextPage;
+            const isActive = this.dd.classList.contains('active');
             
-            if (!itsMenu && !itsHamburger && this.isActive && !itsButtonNextPage && !itsGetButton){
+            if (!itsMenu && !itsHamburger && isActive && !itsButtonNextPage){
                 this.dd.classList.toggle('active');
-                this.isActive = false;
             }
         }
     }
