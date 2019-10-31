@@ -21,7 +21,7 @@ window.onload = () =>{
     
     searchButton.onclick = () => {
         const val = (async() => await mainDdPromise.then(x=>x.val))();
-    
+
         if(val){
             let newsBar = (async() => {
                 const bar = await import('./newsMenu.js');
@@ -29,7 +29,10 @@ window.onload = () =>{
             })();
             (async()=>await newsBar.then(x=>{
                 x.cleanData();
-                x.createNewsBar(val);
+                (async()=>{
+                    const value = await val;
+                    x.createNewsBar(value);
+                })();           
             }))();
         }
     }
