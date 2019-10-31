@@ -1,6 +1,7 @@
 body {
-    background: url('bg-news-image.jpg') repeat-y;
-    background-size: 100%;   
+    background: url('bg-news-image.jpg');
+    background-size: 100%;
+    background-attachment: fixed;   
 }
 
 #main-header {

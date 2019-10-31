@@ -1,19 +1,26 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugun = require('uglifyjs-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
+
 require("babel-core/register");
 require("babel-polyfill");
 
 module.exports = {
-    mode: 'production',
-    entry: ['babel-polyfill','./src/js/index.js','whatwg-fetch'],
+    mode: 'development',
+    entry: ['babel-polyfill','./src/js/index.js'],
     output: {
         filename: "main.js",
         path: path.resolve(__dirname, "dist")
     },
+    optimization:{
+        minimizer:[new UglifyJsPlugun()]
+    },
     plugins:[
         new HtmlWebpackPlugin({
             template:'./src/index.html'
-        })
+        }),
+        new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
     ],
     devServer:{
         contentBase: path.resolve(__dirname, "dist"),

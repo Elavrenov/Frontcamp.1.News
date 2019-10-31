@@ -1,4 +1,4 @@
-import * as newsApi from './newsApi';
+const newsApi =(async() => await import('./newsApi.js'))();
 
 export class NewsBar{
     constructor(el){
@@ -10,7 +10,7 @@ export class NewsBar{
         newsDiv.classList.add('newsDiv');
         this.barEl.appendChild(newsDiv);
 
-        for(let item of await newsApi.getNewsRecordsByPublisherName(publisher)){
+        for(let item of await newsApi.then(x=>x.getNewsRecordsByPublisherName(publisher))){
             let div = document.createElement('div');
             div.classList.add('newsBlock');
 
