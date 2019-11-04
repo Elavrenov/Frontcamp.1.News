@@ -1,39 +1,42 @@
 (async() => await import('../styles/style.css'))();
 (async() => await import ('../styles/news.css'))();
+const errorHandler = (async() => await import('./errorHandler.js'))();
+import proxyApiFactory from './proxyRequestFactory.js';
+import newsApiQueryCreator from './newsApiQueryCreator';
 
-window.onload = () =>{
-    let el = document.getElementById("publishersList");
-    let searchButton = document.getElementById('getNewsButton');
-    let newsOutput = document.getElementById('news');
-    
-    
-    let mainDdPromise = (async() => {
-        const dd = await import('./publishersDd.js');    
-        return new dd.DropDown(el);
-    })(); 
-    let publishersDataPromise = (async() => {
-        const newsApi = await import('./newsApi.js');
-        return await newsApi.getAllNewsPublishers();
-    })();
-    
-    (async() => await mainDdPromise.then(x=>x.createDdList(publishersDataPromise)))();
-    
-    
-    searchButton.onclick = () => {
-        const val = (async() => await mainDdPromise.then(x=>x.val))();
+let el = document.getElementById("publishersList");
+let searchButton = document.getElementById('getNewsButton');
+let newsOutput = document.getElementById('news');
 
-        if(val){
-            let newsBar = (async() => {
-                const bar = await import('./newsMenu.js');
-                return new bar.NewsBar(newsOutput);
+
+let mainDdPromise = (async() => {
+    const dd = await import('./publishersDd.js');    
+    return new dd.DropDown(el);
+})(); 
+let publishersDataPromise = (async() => 
+    await proxyApiFactory('get', newsApiQueryCreator.getAllNewsPublishersQuery())
+    .then(x=>x.sources.map(source => source.name)))();
+
+(async() => await mainDdPromise.then(x=>x.createDdList(publishersDataPromise)
+    .catch(e=> (async()=>await errorHandler
+    .then(x => x.default.createPopup(e)))())))();
+
+
+searchButton.onclick = () => {
+    const val = (async() => await mainDdPromise.then(x=>x.val))();
+
+    if(val){
+        let newsBar = (async() => {
+            const bar = await import('./newsMenu.js');
+            return new bar.NewsBar(newsOutput);
+        })();
+        (async()=>await newsBar.then(x=>{
+            x.cleanData();
+            (async()=>{
+                const value = await val;
+                x.createNewsBar(value).catch(e=>(async() => await errorHandler
+                .then(x => x.default.createPopup(e)))());
             })();
-            (async()=>await newsBar.then(x=>{
-                x.cleanData();
-                (async()=>{
-                    const value = await val;
-                    x.createNewsBar(value);
-                })();           
-            }))();
-        }
+        }))();
     }
 }

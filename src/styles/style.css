@@ -1,8 +1,21 @@
 body {
-    background: url('bg-news-image.jpg');
+    background: url('../images/bg-news-image.jpg');
     background-size: 100%;
     background-attachment: fixed;   
 }
+
+ #page-errors div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aliceblue;
+ }
+
+ #page-errors a{
+    color:red;
+    cursor: pointer;
+    margin-left: 5px;
+ }
 
 #main-header {
     text-align: center;
