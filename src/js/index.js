@@ -15,7 +15,7 @@ let mainDdPromise = (async() => {
 })(); 
 let publishersDataPromise = (async() => 
     await proxyApiFactory('get', newsApiQueryCreator.getAllNewsPublishersQuery())
-    .then(x=>x.sources.map(source => source.name)))();
+    .then(x=>x.sources))();
 
 (async() => await mainDdPromise.then(x=>x.createDdList(publishersDataPromise)
     .catch(e=> (async()=>await errorHandler
@@ -33,7 +33,7 @@ searchButton.onclick = () => {
         (async()=>await newsBar.then(x=>{
             x.cleanData();
             (async()=>{
-                const value = await val;
+                const value = await val.then(x=>x.replace(/ /g,'-'));
                 x.createNewsBar(value).catch(e=>(async() => await errorHandler
                 .then(x => x.default.createPopup(e)))());
             })();

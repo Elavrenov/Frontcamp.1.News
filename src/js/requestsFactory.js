@@ -5,7 +5,8 @@ export default class RequestsFactory{
         switch(httpMethod.toLowerCase()){
             case 'get':
                 try{
-                    return await fetch(requestQuery).then(x=>x.json());
+                    let x = await fetch(requestQuery).then(x=>x.json());
+                    return x;
                 }catch(e){
                     (async()=>await errorHandler.then(x => x.default.createPopup(e)))();
                 }

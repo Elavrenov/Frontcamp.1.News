@@ -1,5 +1,5 @@
 import proxyApiFactory from './proxyRequestFactory.js';
-import * as newsApiQueryCreator from './newsApiQueryCreator';
+import newsApiQueryCreator from './newsApiQueryCreator';
 
 export class NewsBar{
     constructor(el){
@@ -10,7 +10,7 @@ export class NewsBar{
         let data;
 
         try{
-            data = await proxyApiFactory('get', newsApiQueryCreator.default.getNewsRecordsByPublisherNameQuery(publisher))
+            data = await proxyApiFactory('get', newsApiQueryCreator.getNewsRecordsByPublisherNameQuery(publisher))
                 .then(x=>x.articles.slice(0, 12));
         }catch(e){
             throw new Error(e.message);
