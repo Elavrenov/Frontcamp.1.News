@@ -3,29 +3,25 @@
 const errorHandler = (async() => await import('./errorHandler.js'))();
 import proxyApiFactory from './proxyRequestFactory.js';
 import newsApiQueryCreator from './newsApiQueryCreator';
+import { DropDown } from './publishersDd.js';
 
-let el = document.getElementById("publishersList");
-let searchButton = document.getElementById('getNewsButton');
-let newsOutput = document.getElementById('news');
+const el = document.getElementById("publishersList");
+const searchButton = document.getElementById('getNewsButton');
+const newsOutput = document.getElementById('news');
 
+const mainDd = new DropDown(el);
 
-let mainDdPromise = (async() => {
-    const dd = await import('./publishersDd.js');    
-    return new dd.DropDown(el);
-})(); 
-let publishersDataPromise = (async() => 
+const publishersDataPromise = (async() => 
     await proxyApiFactory('get', newsApiQueryCreator.getAllNewsPublishersQuery())
     .then(x=>x.sources))();
 
-(async() => await mainDdPromise.then(x=>x.createDdList(publishersDataPromise)
+(async() => await mainDd.createDdList(publishersDataPromise)
     .catch(e=> (async()=>await errorHandler
-    .then(x => x.default.createPopup(e)))())))();
+    .then(x => x.default.createPopup(e)))()))();
 
 
 searchButton.onclick = () => {
-    const val = (async() => await mainDdPromise.then(x=>x.val))();
-
-    if(val){
+    if(mainDd.val){
         let newsBar = (async() => {
             const bar = await import('./newsMenu.js');
             return new bar.NewsBar(newsOutput);
@@ -33,7 +29,7 @@ searchButton.onclick = () => {
         (async()=>await newsBar.then(x=>{
             x.cleanData();
             (async()=>{
-                const value = await val.then(x=>x.replace(/ /g,'-'));
+                const value = mainDd.val;
                 x.createNewsBar(value).catch(e=>(async() => await errorHandler
                 .then(x => x.default.createPopup(e)))());
             })();

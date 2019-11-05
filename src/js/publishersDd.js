@@ -20,7 +20,7 @@ export class DropDown {
             if(data.target === this.opts){
                 return;
             }
-            
+
             this.val = data.target.id;
             this.placeholder.textContent = data.target.textContent;
         };
@@ -38,6 +38,7 @@ export class DropDown {
         }
     }
     async createDdList(data){
+        debugger;
         const defaultPlaceholder = "Publishers List"
 
         this.publishersMap = new Map();

@@ -1,4 +1,4 @@
-const apiKey = "d7081477cc2b49a89e8b5dc3340acb97";
+const apiKey = "a8e7022f2469447b94e5d28e5ecbecdd";
 
 export default class newsApiQueries{
     static getAllNewsPublishersQuery = () => `https://newsapi.org/v2/sources?apiKey=${apiKey}`;
