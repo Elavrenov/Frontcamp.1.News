@@ -1,4 +1,4 @@
-import proxyApiFactory from './proxyRequestFactory.js';
+import proxyApiFactory from './requestsFactory.js';
 import newsApiQueryCreator from './newsApiQueryCreator';
 
 export class NewsBar{
@@ -7,14 +7,8 @@ export class NewsBar{
     }
 
     async createNewsBar(publisher){
-        let data;
-
-        try{
-            data = await proxyApiFactory('get', newsApiQueryCreator.getNewsRecordsByPublisherNameQuery(publisher))
+        const data = await proxyApiFactory('get', newsApiQueryCreator.getNewsRecordsByPublisherNameQuery(publisher))
                 .then(x=>x.articles.slice(0, 12));
-        }catch(e){
-            throw new Error(e.message);
-        } 
 
         const newsDiv = document.createElement('div');
         newsDiv.classList.add('newsDiv');

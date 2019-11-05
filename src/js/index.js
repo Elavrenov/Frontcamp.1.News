@@ -1,7 +1,6 @@
 (async() => await import('../styles/style.css'))();
 (async() => await import ('../styles/news.css'))();
-const errorHandler = (async() => await import('./errorHandler.js'))();
-import proxyApiFactory from './proxyRequestFactory.js';
+import proxyApiFactory from './requestsFactory.js';
 import newsApiQueryCreator from './newsApiQueryCreator';
 import { DropDown } from './publishersDd.js';
 
@@ -11,28 +10,22 @@ const newsOutput = document.getElementById('news');
 
 const mainDd = new DropDown(el);
 
-const publishersDataPromise = (async() => 
-    await proxyApiFactory('get', newsApiQueryCreator.getAllNewsPublishersQuery())
-    .then(x=>x.sources))();
+const publishersDataPromise = (async() =>
+    await proxyApiFactory('get', newsApiQueryCreator.getAllNewsPublishersQuery()).then(x=>x.sources))(); 
+    
 
-(async() => await mainDd.createDdList(publishersDataPromise)
-    .catch(e=> (async()=>await errorHandler
-    .then(x => x.default.createPopup(e)))()))();
-
+(async() => await mainDd.createDdList(publishersDataPromise))(); 
 
 searchButton.onclick = () => {
     if(mainDd.val){
-        let newsBar = (async() => {
-            const bar = await import('./newsMenu.js');
-            return new bar.NewsBar(newsOutput);
+        (async()=>{
+                const bar = await import('./newsMenu.js');
+                const newsBar = new bar.NewsBar(newsOutput);
+                newsBar.cleanData();
+                await newsBar.createNewsBar(mainDd.val);
         })();
-        (async()=>await newsBar.then(x=>{
-            x.cleanData();
-            (async()=>{
-                const value = mainDd.val;
-                x.createNewsBar(value).catch(e=>(async() => await errorHandler
-                .then(x => x.default.createPopup(e)))());
-            })();
-        }))();
     }
 }
+
+invalidRequest.onclick = async() => 
+    await proxyApiFactory('postget', newsApiQueryCreator.getAllNewsPublishersQuery());
