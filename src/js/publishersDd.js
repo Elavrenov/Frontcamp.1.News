@@ -5,6 +5,7 @@ export class DropDown {
         this.opts;
         this.val;
         this.buttonNextPage;
+        this.publishersMap;
     }
     init() {
         this.placeholder = this.dd.children[0];
@@ -16,8 +17,12 @@ export class DropDown {
         };
         
         this.opts.onclick = (data) =>{
-            this.val = data.target.textContent;
-            this.placeholder.textContent = this.val;
+            if(data.target === this.opts){
+                return;
+            }
+
+            this.val = data.target.id;
+            this.placeholder.textContent = data.target.textContent;
         };
         
         document.onclick = (e) => {
@@ -32,12 +37,18 @@ export class DropDown {
             }
         }
     }
-    get getTargetDdValue(){
-        return this.val;
-    }
     async createDdList(data){
+        debugger;
         const defaultPlaceholder = "Publishers List"
-        const chunkPublishersData = this.sliceData(await data);     
+
+        this.publishersMap = new Map();
+        let mapKeys = [];
+        for(let item of await data){
+            this.publishersMap.set(item.id,item.name);
+            mapKeys.push(item.id);
+        }
+
+        const chunkPublishersData = this.sliceData(mapKeys);     
         let dataIterator = this.sliceDataIterator(chunkPublishersData);
 
         this.getHtml(dataIterator.next().value);
@@ -86,7 +97,8 @@ export class DropDown {
 
         for(let item of promiseData){
             let li = document.createElement('li');
-            li.innerHTML = item;
+            li.innerHTML = this.publishersMap.get(item);
+            li.id = item;
             ul.appendChild(li);
         }
 
