@@ -38,8 +38,20 @@ class RequestsFactory{
 }
 
 const proxyHandler = {
-    apply: function(target, that, args){
-        console.log(`method: ${args[0]}, \nquery: ${args[1]}, \nquery body: ${args[2]}`);
+    apply: function(target, _that, args){
+        let consoleString ='';
+
+        for(let arg of args){
+            if(typeof arg === 'object'){
+                for(let item in arg){
+                    consoleString += `${item}=${arg[item]}\n`;
+                }         
+            }
+            else{
+                consoleString += `${arg}\n`;
+            }        
+        }
+        console.log(consoleString);      
     
         return target(...args);
     }
