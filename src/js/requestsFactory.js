@@ -1,9 +1,9 @@
 class RequestsFactory{
-    static async createRequest(httpMethod, url, urlParams, requestParams, body){
+    static async createRequest(httpMethod, url, urlParams, body){
         switch(httpMethod.toLowerCase()){
             case 'get': return await RequestsFactory.sendRequest(url, urlParams);
-            case 'post': return await RequestsFactory.sendRequest(url, urlParams, requestParams, body);
-            case 'put': return await RequestsFactory.sendRequest(url, urlParams, requestParams, body);
+            case 'post': return await RequestsFactory.sendRequest(url, urlParams, body);
+            case 'put': return await RequestsFactory.sendRequest(url, urlParams, body);
             case 'delete': return await RequestsFactory.sendRequest(url, urlParams);
             default: {
                 const errHandler = await import(/* webpackChunkName: "errorHandler" */ './errorHandler.js');
@@ -11,13 +11,12 @@ class RequestsFactory{
             }        
         }
     }
-    static async sendRequest (url, urlParams, requestParams, body){
+    static async sendRequest (url, urlParams, body){
         try{
             let result;
 
-            if(body && requestParams){
-                requestParams.body = JSON.stringify(body);
-                result = await fetch(query, requestParams);
+            if(body){
+                result = await fetch(url, body);
             }
             else{
                 let queryParams = '?';
