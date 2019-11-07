@@ -1,5 +1,5 @@
-(async() => await import('../styles/style.css'))();
-(async() => await import ('../styles/news.css'))();
+(async() => await import(/* webpackChunkName: "cssStyle" */ '../styles/style.css'))();
+(async() => await import (/* webpackChunkName: "cssNews" */ '../styles/news.css'))();
 import proxyApiFactory from './requestsFactory.js';
 import newsApiQueryCreator from './newsApiQueryCreator';
 import { DropDown } from './publishersDd.js';
@@ -7,19 +7,18 @@ import { DropDown } from './publishersDd.js';
 const el = document.getElementById("publishersList");
 const searchButton = document.getElementById('getNewsButton');
 const newsOutput = document.getElementById('news');
-
 const mainDd = new DropDown(el);
 
-const publishersDataPromise = (async() =>
-    await proxyApiFactory('get', newsApiQueryCreator.getAllNewsPublishersQuery()).then(x=>x.sources))(); 
-    
-
-(async() => await mainDd.createDdList(publishersDataPromise))(); 
+(async() => {
+    const query = newsApiQueryCreator.getAllNewsPublishersQuery();
+    const publishers = await proxyApiFactory('get', query.url, query.params);
+    await mainDd.createDdList(await publishers.sources);
+})(); 
 
 searchButton.onclick = () => {
     if(mainDd.val){
         (async()=>{
-                const bar = await import('./newsMenu.js');
+                const bar = await import(/* webpackChunkName: "newsMenu" */ './newsMenu.js');
                 const newsBar = new bar.NewsBar(newsOutput);
                 newsBar.cleanData();
                 await newsBar.createNewsBar(mainDd.val);
@@ -27,5 +26,7 @@ searchButton.onclick = () => {
     }
 }
 
-invalidRequest.onclick = async() => 
-    await proxyApiFactory('postget', newsApiQueryCreator.getAllNewsPublishersQuery());
+invalidRequest.onclick = async() =>{
+    const query = newsApiQueryCreator.getAllNewsPublishersQuery();
+    await proxyApiFactory('postget', query.url, query.params);
+} 

@@ -7,14 +7,15 @@ export class NewsBar{
     }
 
     async createNewsBar(publisher){
-        const data = await proxyApiFactory('get', newsApiQueryCreator.getNewsRecordsByPublisherNameQuery(publisher))
-                .then(x=>x.articles.slice(0, 12));
+        const query = newsApiQueryCreator.getNewsRecordsByPublisherNameQuery(publisher);
+        const data = await proxyApiFactory('get', query.url, query.params);
+        const articles = await data.articles.slice(0, 12);
 
         const newsDiv = document.createElement('div');
         newsDiv.classList.add('newsDiv');
         this.barEl.appendChild(newsDiv);
 
-        for(let item of data){
+        for(let item of articles){
             let div = document.createElement('div');
             div.classList.add('newsBlock');
 

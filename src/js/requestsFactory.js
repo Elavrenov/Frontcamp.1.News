@@ -1,22 +1,38 @@
-const errorHandler = (async() => await import('./errorHandler.js'))();
-
 class RequestsFactory{
-    static async createRequest(httpMethod, requestQuery, requestParameters){
+    static async createRequest(httpMethod, url, urlParams, requestParams, body){
         switch(httpMethod.toLowerCase()){
-            case 'get': return await RequestsFactory.sendRequest(requestQuery);
-            case 'post': return await RequestsFactory.sendRequest(requestQuery, requestParameters);
-            case 'put': return await RequestsFactory.sendRequest(requestQuery, requestParameters);
-            case 'delete': return await RequestsFactory.sendRequest(requestQuery);
-            default: (async()=>await errorHandler.then(x => x.default.createPopup('unsupported httpMethod')))();         
+            case 'get': return await RequestsFactory.sendRequest(url, urlParams);
+            case 'post': return await RequestsFactory.sendRequest(url, urlParams, requestParams, body);
+            case 'put': return await RequestsFactory.sendRequest(url, urlParams, requestParams, body);
+            case 'delete': return await RequestsFactory.sendRequest(url, urlParams);
+            default: {
+                const errHandler = await import(/* webpackChunkName: "errorHandler" */ './errorHandler.js');
+                errHandler.default.createPopup("invalid http request");
+            }        
         }
     }
-    static async sendRequest (query, body = null){
+    static async sendRequest (url, urlParams, requestParams, body){
         try{
-            const result = await fetch(query,body);
-            let jsonResult = await result.json();
-            return jsonResult;
+            let result;
+
+            if(body && requestParams){
+                requestParams.body = JSON.stringify(body);
+                result = await fetch(query, requestParams);
+            }
+            else{
+                let queryParams = '?';
+                for(let prop in urlParams){
+                    queryParams += `${prop}=${urlParams[prop]}&`;
+                }
+                const query = `${url}${queryParams}`.slice(0,-1);
+
+                result = await fetch(query);
+            }
+            
+            return await result.json();
         }catch(e){
-            (async()=>await errorHandler.then(x => x.default.createPopup(e.message)))();
+            const errHandler = await import(/* webpackChunkName: "errorHandler" */ './errorHandler.js');
+            errHandler.default.createPopup(e.message);
         }
     }
 }
