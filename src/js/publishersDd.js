@@ -38,7 +38,6 @@ export class DropDown {
         }
     }
     async createDdList(data){
-        debugger;
         const defaultPlaceholder = "Publishers List"
 
         this.publishersMap = new Map();

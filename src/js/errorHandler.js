@@ -20,7 +20,7 @@ class ErrorHandler{
         errorDiv.appendChild(closeBtn);
         closeBtn.onclick = () => errorDiv.parentNode.removeChild(errorDiv);;
 
-        console.log(`Error handler: ${exceptionMsg.message}`);
+        console.log(`Error handler: ${exceptionMsg}`);
         initialDiv.appendChild(errorDiv);     
     }   
 }

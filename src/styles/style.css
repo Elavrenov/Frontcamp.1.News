@@ -39,7 +39,7 @@ div.news-bar-flex{
     margin-bottom: 50px;
 }
 
-#getNewsButton, #changePublishers {
+#getNewsButton, #changePublishers, #invalidRequest {
     display: inline-block;
     font-family: arial,sans-serif;
     font-size: 15px;
